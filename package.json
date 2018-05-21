@@ -1,0 +1,23 @@
+{
+  "name": "todolists",
+  "version": "1.0.0",
+  "description": "An app to manage todolists.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gurpreet2/todolists.git"
+  },
+  "author": "Gurpreet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Gurpreet2/todolists/issues"
+  },
+  "homepage": "https://github.com/Gurpreet2/todolists#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "express": "^4.16.3"
+  }
+}
