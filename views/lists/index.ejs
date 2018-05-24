@@ -1,0 +1,25 @@
+
+<% include ../partials/navheader %>
+
+<h2>Lists</h2>
+
+<ul>
+  <% lists.forEach(function(list) { %>
+    <li>
+      <a href="/lists/<%= list._id %>"><%= list.name %></a>
+      <% if (list.items.length > 0) { %>
+        <ul>
+          <% let max = Math.min(list.items.length, 3); %>
+          <% for (let i = 0; i < max; i++) { %>
+            <li><%= list.items[i] %></li>
+          <% } %>
+          <% if (max < list.items.length) { %>
+            <li>...</li>
+          <% } %>
+        </ul>
+      <% } %>
+    </li>
+  <% }); %>
+</ul>
+
+<% include ../partials/footer %>
