@@ -1,0 +1,21 @@
+
+<% include ../partials/navheader %>
+
+<h2><%= list.name %></h2>
+
+<h6><%= list.description %></h6>
+
+<ul>
+  <% list.items.forEach(function(item) { %>
+    <li>
+      <%= item %>
+    </li>
+  <% }); %>
+</ul>
+
+<a class="btn btn-default" href="/lists/<%= list._id %>/edit">Edit</a>
+<form action="/lists/<%= list._id %>?_method=DELETE" method="POST">
+  <button class="btn btn-warning" type="Submit">Delete List</button>
+</form>
+
+<% include ../partials/footer %>
