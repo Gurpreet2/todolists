@@ -2,10 +2,11 @@
 const express = require("express");
 let router = express.Router();
 let List = require("../models/list");
+let Item = require("../models/item");
 
 // INDEX ROUTE - list all lists
 router.get("/", function(req, res) {
-  List.find({}, function(err, lists) {
+  List.find({}).populate("items").exec(function(err, lists) {
     if (err) {
       console.log(err);
     } else {
@@ -32,9 +33,10 @@ router.post("/", function(req, res) {
 
 // SHOW ROUTE
 router.get("/:id", function(req, res) {
-  List.findById(req.params.id, function(err, list) {
-    if (err) {
+  List.findById(req.params.id).populate("items").exec(function(err, list) {
+    if (err || !list) {
       console.log(err);
+      res.redirect("/lists")
     } else {
       res.render("lists/show", {list: list});
     }
@@ -44,8 +46,9 @@ router.get("/:id", function(req, res) {
 // EDIT - show edit form
 router.get("/:id/edit", function(req, res) {
   List.findById(req.params.id, function(err, list) {
-    if (err) {
+    if (err || !list) {
       console.log(err);
+      res.redirect("/lists");
     } else {
       res.render("lists/edit", {list: list});
     }
@@ -55,8 +58,9 @@ router.get("/:id/edit", function(req, res) {
 // UPDATE - update the form
 router.put("/:id", function(req, res) {
   List.findByIdAndUpdate(req.params.id, req.body.list, function(err, list) {
-    if (err) {
+    if (err || !list) {
       console.log(err);
+      res.redirect("/lists");
     } else {
       res.redirect("/lists/" + req.params.id);
     }
@@ -65,10 +69,20 @@ router.put("/:id", function(req, res) {
 
 // DESTROY >:[ ROUTE
 router.delete("/:id", function(req, res) {
-  List.findByIdAndRemove(req.params.id, function(err) {
-    if (err) {
+  // delete the list
+  List.findByIdAndRemove(req.params.id, function(err, list) {
+    if (err || !list) {
       console.log(err);
+      res.redirect("/lists");
     } else {
+      // delete all the items in the list
+      list.items.forEach(function(item) {
+        Item.findByIdAndRemove(item, function(err, item) {
+          if (err) {
+            console.log(err);
+          }
+        });
+      });
       res.redirect("/lists");
     }
   });

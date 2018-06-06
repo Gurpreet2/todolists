@@ -13,6 +13,7 @@ var app = express();
 // DATABASE SETTINGS
 // ============
 mongoose.connect("mongodb://localhost/todolist");
+var Item = require("./models/item");
 var List = require("./models/list");
 
 // ============
@@ -23,7 +24,7 @@ app.use(express.static(__dirname + "/views"));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
-
+app.disable('x-powered-by');
 
 // seed the database
 require("./seeds.js")();
@@ -33,6 +34,7 @@ require("./seeds.js")();
 // ============
 app.use(require("./routes/index"));
 app.use("/lists", require("./routes/lists"));
+app.use("/lists/:id/items", require("./routes/items"));
 
 
 // ============
