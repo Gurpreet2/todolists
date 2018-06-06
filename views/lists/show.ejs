@@ -5,11 +5,17 @@
 
 <h6><%= list.description %></h6>
 
-<ul>
+<form action="/lists/<%= list._id %>/items" method="POST">
+  <input type="text" name="item[text]" placeholder="Add a new item">
+  <input type="hidden" name="item[completed]" value="false">
+  <button class="btn btn-default">Submit</button>
+</form>
+
+<div id="abcdef">hi there</div>
+
+<ul id="<%= list._id %>">
   <% list.items.forEach(function(item) { %>
-    <li>
-      <%= item %>
-    </li>
+    <li id="<%= item._id %>"><span><%= item.text %></span><form class="delete-item-button" action="/lists/<%= list._id %>/items/<%= item._id %>?_method=DELETE" method="POST"><button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></form></li>
   <% }); %>
 </ul>
 
@@ -17,5 +23,7 @@
 <form action="/lists/<%= list._id %>?_method=DELETE" method="POST">
   <button class="btn btn-warning" type="Submit">Delete List</button>
 </form>
+
+<script type="text/javascript" src="/assets/js/lists/list-animator.js"></script>
 
 <% include ../partials/footer %>

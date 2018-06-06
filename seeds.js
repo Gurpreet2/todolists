@@ -1,5 +1,6 @@
 
 const List = require("./models/list");
+const Item = require("./models/item");
 
 function seedDB() {
   let lists = [
@@ -7,36 +8,72 @@ function seedDB() {
       name: "work",
       description: "Stuff I should do for work at some point",
       items: [
-        "learn go",
-        "learn docker",
-        "learn kubernetes",
-        "learn django"
+        {
+          text: "learn go",
+          completed: false
+        },
+        {
+          text: "learn docker",
+          completed: false
+        },
+        {
+          text: "learn kubernetes",
+          completed: false
+        },
+        {
+          text: "learn django",
+          completed: false
+        }
       ]
     },
     {
       name: "priorities",
       description: "What is important to me",
       items: [
-        "responsibilities",
-        "programming projects",
-        "kanji"
+        {
+          text: "responsibilities",
+          completed: false
+        },
+        {
+          text: "programming projects",
+          completed: false
+        },
+        {
+          text: "kanji",
+          completed: false
+        }
       ]
     },
     {
       name: "movies to watch",
       description: "Movies I want to watch",
       items: [
-        "deadpool 2",
-        "star wars 8.5"
+        {
+          text: "deadpool 2",
+          completed: false
+        },
+        {
+          text: "star wars 8.5",
+          completed: false
+        }
       ]
     },
     {
       name: "places to visit",
       description: "Places I want to go to",
       items: [
-        "japan",
-        "south korea",
-        "montreal"
+        {
+          text: "japan",
+          completed: false
+        },
+        {
+          text: "south korea",
+          completed: false
+        },
+        {
+          text: "montreal",
+          completed: false
+        }
       ]
     }
   ];
@@ -45,14 +82,33 @@ function seedDB() {
     if (err) {
       console.log(err);
     } else {
-      lists.forEach(function(list) {
-        List.create(list, function(err, list) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("created a list!");
-          }
-        });
+      Item.remove({}, function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          lists.forEach(function(listData) {
+            let items = listData.items;
+            let list = {name: listData.name, description: listData.description};
+            List.create(list, function(err, list) {
+              if (err) {
+                console.log(err);
+              } else {
+                Item.create(items, function(err, items) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    items.forEach(function(item) {
+                      console.log("added an item to the list");
+                      list.items.push(item);
+                    });
+                    list.save();
+                  }
+                });
+                console.log("created a list!");
+              }
+            });
+          });
+        }
       });
     }
   });
