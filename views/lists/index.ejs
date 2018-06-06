@@ -11,7 +11,7 @@
         <ul>
           <% let max = Math.min(list.items.length, 3); %>
           <% for (let i = 0; i < max; i++) { %>
-            <li><%= list.items[i] %></li>
+            <li><%= list.items[i].text %></li>
           <% } %>
           <% if (max < list.items.length) { %>
             <li>...</li>
