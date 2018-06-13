@@ -1,6 +1,8 @@
 
 <% include ../partials/navheader %>
 
+<script type="text/javascript" src="/assets/js/lists/list-animator.js" defer async></script>
+
 <h2><%= list.name %></h2>
 
 <h6><%= list.description %></h6>
@@ -13,9 +15,13 @@
 
 <div id="abcdef">hi there</div>
 
-<ul id="<%= list._id %>">
+<ul id="<%= list._id %>" class="list-list">
   <% list.items.forEach(function(item) { %>
-    <li id="<%= item._id %>"><span><%= item.text %></span><form class="delete-item-button" action="/lists/<%= list._id %>/items/<%= item._id %>?_method=DELETE" method="POST"><button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></form></li>
+    <li id="<%= item._id %>" class="list-item">
+      <span class="list-item-text"><%= item.text %></span>
+      <span class="list-item-edit-button list-item-button">Edit</span>
+      <form class="list-item-button" action="/lists/<%= list._id %>/items/<%= item._id %>?_method=DELETE" method="POST"><button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></form>
+    </li>
   <% }); %>
 </ul>
 
@@ -23,7 +29,5 @@
 <form action="/lists/<%= list._id %>?_method=DELETE" method="POST">
   <button class="btn btn-warning" type="Submit">Delete List</button>
 </form>
-
-<script type="text/javascript" src="/assets/js/lists/list-animator.js"></script>
 
 <% include ../partials/footer %>

@@ -98,7 +98,7 @@ function seedDB() {
                     console.log(err);
                   } else {
                     items.forEach(function(item) {
-                      console.log("added an item to the list");
+                      //console.log("added an item to the list");
                       list.items.push(item);
                     });
                     list.save();

@@ -42,13 +42,14 @@ router.post("/", function(req, res) {
 
 // UPDATE route
 router.put("/:itemId", function(req, res) {
+  req.body.item.text = decodeURI(unescape(req.body.item.text));
   Item.findByIdAndUpdate(req.params.itemId, req.body.item, function(err, item) {
     if (err) {
       res.status(500).send("An error occurred while trying to retrieve the item data from the database.");
     } else if (!item) {
       res.status(404).send("The item does not exist.");
     } else {
-      res.redirect("/lists/" + req.params.id);
+      res.status(200).send();
     }
   });
 });
