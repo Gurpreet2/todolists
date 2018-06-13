@@ -13,8 +13,6 @@ var app = express();
 // DATABASE SETTINGS
 // ============
 mongoose.connect("mongodb://localhost/todolist");
-var Item = require("./models/item");
-var List = require("./models/list");
 
 // ============
 // APP SETTINGS
@@ -25,6 +23,8 @@ app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.disable('x-powered-by');
+const PORT = process.env.PORT || 8080;
+const IP = process.env.IP || "127.0.0.1";
 
 // seed the database
 require("./seeds.js")();
@@ -40,6 +40,6 @@ app.use("/lists/:id/items", require("./routes/items"));
 // ============
 // LISTEN
 // ============
-app.listen(process.env.PORT, process.env.IP, function() {
+app.listen(PORT, IP, function() {
   console.log("ToDoList App started listening on port " + process.env.PORT);
 });

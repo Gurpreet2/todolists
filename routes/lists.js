@@ -34,9 +34,12 @@ router.post("/", function(req, res) {
 // SHOW ROUTE
 router.get("/:id", function(req, res) {
   List.findById(req.params.id).populate("items").exec(function(err, list) {
-    if (err || !list) {
-      console.log(err);
-      res.redirect("/lists")
+    if (err) {
+      console.log("An error occurred while loading the list with id: " + req.params.id + ", and the error is: " + err);
+      res.redirect("/lists");
+    } else if (!list) {
+      console.log("List with id: " + req.params.id + " was not found!");
+      res.redirect("/lists");
     } else {
       res.render("lists/show", {list: list});
     }
