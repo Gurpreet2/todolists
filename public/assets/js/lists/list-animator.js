@@ -6,19 +6,22 @@
 const listId = document.getElementsByClassName("list-list")[0].id;
 let itemId = null, text = null, editedText = null, itemTextElement = null, completed = null;
 
-// edit an item NOT USING JQUERY
+// edit an item without using JQuery
 document.querySelectorAll("li.list-item").forEach(function(item) {
   // Listen for clicks on the edit button, to edit
   item.getElementsByClassName("list-item-edit-button")[0].addEventListener("click", function() {
     itemId = item.id;
     itemTextElement = item.getElementsByClassName("list-item-text")[0];
     text = itemTextElement.textContent;
+    // Ask user for edit
     editedText = prompt("Enter edited string: ", text);
     if (!editedText) {
       // user clicked cancel
       return;
     }
+    // Set edit to be reflected in the page without reloading
     itemTextElement.textContent = editedText;
+    // Send update to the item to the database
     completed = item.getElementsByTagName("input")[0].checked;
     updateItem(itemId, editedText, completed);
   });
@@ -27,8 +30,10 @@ document.querySelectorAll("li.list-item").forEach(function(item) {
   item.getElementsByTagName("input")[0].addEventListener("click", function() {
     itemId = item.id;
     itemTextElement = item.getElementsByClassName("list-item-text")[0];
+    // Get text and if item is completed
     text = itemTextElement.textContent;
     completed = this.checked;
+    // Send update to the database
     updateItem(itemId, text, completed);
   });
 });
@@ -36,7 +41,7 @@ document.querySelectorAll("li.list-item").forEach(function(item) {
 // Update the item with item ID "itemId"
 function updateItem(itemId, text, completed) {
   let xhr = null;
-  if (window.XMLHttpRequest) {
+  if (XMLHttpRequest) {
     xhr = new XMLHttpRequest();
   } else {
     xhr = new ActiveXObject("Microsoft.XMLHTTP");
