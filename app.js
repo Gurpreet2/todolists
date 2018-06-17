@@ -17,11 +17,13 @@ const db_name = "todolist"
 // Connect to Mongo database if it is up, error out if not
 mongoose.connect("mongodb://" + mongo_host + "/" + db_name, {
   connectTimeoutMS: 5000
-}, function(error) {
-  console.log("Unable to connect to the Mongo database running on host " + mongo_host);
-  console.log("Please verify it is up and running and accepting connections on port 27017.");
-  console.log(error);
-  process.exit();
+}, function(err) {
+  if (err) {
+    console.log("Unable to connect to the Mongo database running on host " + mongo_host);
+    console.log("Please verify it is up and running and accepting connections on port 27017.");
+    console.log(err);
+    process.exit();
+  }
 });
 
 // ============
