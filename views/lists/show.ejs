@@ -1,33 +1,44 @@
 
 <% include ../partials/navheader %>
 
-<script type="text/javascript" src="/assets/js/lists/list-animator.js" defer async></script>
-
 <h2><%= list.name %></h2>
 
-<h6><%= list.description %></h6>
+<h6 class="list-description"><%= list.description %></h6>
+
+<hr>
 
 <form action="/lists/<%= list._id %>/items" method="POST">
   <input type="text" name="item[text]" placeholder="Add a new item">
   <input type="hidden" name="item[completed]" value="false">
-  <button class="btn btn-default">Submit</button>
+  <button class="btn btn-default">
+    Submit
+  </button>
 </form>
 
-<div id="abcdef">hi there</div>
-
-<ul id="<%= list._id %>" class="list-list">
+<ul id="<%= list._id %>" class="list-list list-group">
   <% list.items.forEach(function(item) { %>
-    <li id="<%= item._id %>" class="list-item">
-      <span class="list-item-text"><%= item.text %></span>
-      <span class="list-item-edit-button list-item-button">Edit</span>
-      <form class="list-item-button" action="/lists/<%= list._id %>/items/<%= item._id %>?_method=DELETE" method="POST"><button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button></form>
+    <li id="<%= item._id %>" class="d-flex flex-nowrap list-item list-group-item">
+      <input class="d-flex list-item-checkbox" type="checkbox" value=""<% if (item.completed) { %> checked<% } %>>
+      <span class="d-flex flex-fill list-item-text" for="check1"><%= item.text %></span>
+      <button class="d-flex justify-flex-end list-item-edit-button btn btn-outline-dark btn-sm">
+        <i class="far fa-edit"></i>
+      </button>
+      <form class="d-flex justify-flex-end list-item-delete-button" action="/lists/<%= list._id %>/items/<%= item._id %>?_method=DELETE" method="POST">
+        <button class="btn btn-sm btn-danger">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </form>
     </li>
   <% }); %>
 </ul>
 
 <a class="btn btn-default" href="/lists/<%= list._id %>/edit">Edit</a>
 <form action="/lists/<%= list._id %>?_method=DELETE" method="POST">
-  <button class="btn btn-warning" type="Submit">Delete List</button>
+  <button class="btn btn-warning" type="Submit">
+    Delete List
+  </button>
 </form>
+
+<script type="text/javascript" src="/assets/js/lists/list-animator.js" async></script>
 
 <% include ../partials/footer %>

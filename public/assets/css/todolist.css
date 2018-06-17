@@ -11,17 +11,22 @@ ul li {
   margin-bottom: 2%;
 }
 
+.list-description {
+  opacity: 0.5;
+}
+
 .todolist-previews {
   list-style-type: none;
   padding-left: 0;
 }
 
 .list-list {
-  
+  list-style-type: none;
 }
 
 .list-item {
-  
+  max-width: 75%;
+  /*min-width: 500px;*/
 }
 
 .list-item-text {
@@ -29,10 +34,21 @@ ul li {
 }
 
 .list-item-button {
+  width: 10%;
+  padding: 5px;
   display: inline;
   float: right;
 }
 
 .list-item-edit-button {
   
+}
+
+.list-item-delete-button {
+  margin-left: 10px;
+}
+
+li.list-item .list-item-checkbox {
+  margin-top: 5px;
+  margin-right: 8px;
 }
