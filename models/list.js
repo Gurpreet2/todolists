@@ -9,7 +9,14 @@ let listSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Item"
     }
-  ]
+  ],
+  author: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
+    username: String
+  }
 });
 
 module.exports = mongoose.model("lists", listSchema);
