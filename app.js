@@ -61,7 +61,7 @@ const PORT = process.env.PORT || 8080;
 const IP = process.env.IP || "127.0.0.1";
 
 // seed the database
-require("./seeds.js")();
+//require("./seeds.js")();
 
 // ============
 // ROUTES
