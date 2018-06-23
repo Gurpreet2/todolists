@@ -5,7 +5,11 @@
 const express = require("express"),
       mongoose = require("mongoose"),
       bodyParser = require("body-parser"),
-      methodOverride = require("method-override");
+      methodOverride = require("method-override"),
+      passport = require("passport"),
+      LocalStrategy = require("passport-local"),
+      crypto = require("crypto"),
+      User = require("./models/user");
 var app = express();
 
 
@@ -26,6 +30,24 @@ mongoose.connect("mongodb://" + mongo_host + "/" + db_name, {
   }
 });
 
+
+// Passport Settings
+app.use(require("express-session")({
+  secret: crypto.randomBytes(32).toString("base64"),
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
+
 // ============
 // APP SETTINGS
 // ============
@@ -45,6 +67,7 @@ require("./seeds.js")();
 // ROUTES
 // ============
 app.use(require("./routes/index"));
+app.use(require("./routes/auths"));
 app.use("/lists", require("./routes/lists"));
 app.use("/lists/:id/items", require("./routes/items"));
 

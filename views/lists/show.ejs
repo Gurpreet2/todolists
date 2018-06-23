@@ -8,7 +8,7 @@
 <hr>
 
 <form action="/lists/<%= list._id %>/items" method="POST">
-  <input type="text" name="item[text]" placeholder="Add a new item">
+  <input type="text" name="item[text]" placeholder="Add a new item" autofocus>
   <input type="hidden" name="item[completed]" value="false">
   <button class="btn btn-default">
     Submit

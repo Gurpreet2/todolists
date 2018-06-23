@@ -4,7 +4,7 @@
 <form action="/lists/<%= list._id %>?_method=PUT" method="POST">
   <div class="form-group">
     <label for="listName">Name</label>
-    <input type="text" id="listName" class="form-control" name="list[name]" placeholder="name" value="<%= list.name %>">
+    <input type="text" id="listName" class="form-control" name="list[name]" placeholder="name" value="<%= list.name %>" autofocus>
   </div>
   <div class="form-group">
     <label for="listDescription">Description</label>

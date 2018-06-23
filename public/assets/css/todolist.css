@@ -3,10 +3,6 @@
   white-space: nowrap;
 }
 
-ul li {
-  max-width: 50%;
-}
-
 .navbar {
   margin-bottom: 2%;
 }
