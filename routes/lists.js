@@ -31,6 +31,8 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 
 // CREATE ROUTE - create post
 router.post("/", middleware.isLoggedIn, function(req, res) {
+  req.body.list.name = req.sanitize(req.body.list.name);
+  req.body.list.description = req.sanitize(req.body.list.description);
   User.findById(req.user._id, function(err, user) {
     if (err) {
       console.error(err);
@@ -82,7 +84,8 @@ router.get("/:id/edit", middleware.isLoggedIn, function(req, res) {
 
 // UPDATE - update the list
 router.put("/:id", middleware.isLoggedIn, function(req, res) {
-  // make sure user owns the list
+  req.body.list.name = req.sanitize(req.body.list.name);
+  req.body.list.description = req.sanitize(req.body.list.description);
   User.findById(req.user._id).populate({path: "lists", match: {_id: req.params.id}, options: {limit: 1}}).exec(function(err, user) {
     if (err) {
       console.error(err);

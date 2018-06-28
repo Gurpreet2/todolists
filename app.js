@@ -9,7 +9,8 @@ const express = require("express"),
       passport = require("passport"),
       LocalStrategy = require("passport-local"),
       crypto = require("crypto"),
-      User = require("./models/user");
+      User = require("./models/user"),
+      expressSanitizer = require("express-sanitizer");
 var app = express();
 
 
@@ -56,6 +57,7 @@ app.use(express.static(__dirname + "/views"));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressSanitizer());
 app.disable('x-powered-by');
 const PORT = process.env.PORT || 8080;
 const IP = process.env.IP || "127.0.0.1";

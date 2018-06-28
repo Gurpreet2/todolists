@@ -17,6 +17,10 @@ router.get("/", function(req, res) {
 
 // CREATE ITEM, add to list
 router.post("/", middleware.isLoggedIn, function(req, res) {
+  req.body.item.text = req.sanitize(req.body.item.text);
+  if (req.body.item.completed !== "true" || req.body.item.completed !== "false") {
+    req.body.item.completed = "false";
+  }
   User.findById(req.user._id).populate({path: "lists", match: {_id: req.params.id}, options: {limit: 1}}).exec(function(err, user) {
     if (err) {
       console.error(err);
@@ -47,7 +51,10 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
 
 // UPDATE route
 router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
-  // make sure user owns item
+  req.body.item.text = req.sanitize(req.body.item.text);
+  if (req.body.item.completed !== "true" || req.body.item.completed !== "false") {
+    req.body.item.completed = "false";
+  }
   User.findById(req.user._id).populate({
     path: "lists", 
     populate: {
