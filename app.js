@@ -78,7 +78,7 @@ app.use("/lists/:id/items", require("./routes/items"));
 // LISTEN
 // ============
 const port = process.env.PORT || 8080;
-const ip = process.env.IP || "127.0.0.1";
+const ip = process.env.IP || "0.0.0.0";
 console.log(port);
 console.log(ip);
 console.log(process.env.PORT);
