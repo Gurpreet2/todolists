@@ -77,6 +77,11 @@ app.use("/lists/:id/items", require("./routes/items"));
 // ============
 // LISTEN
 // ============
-module.exports = app.listen(PORT, IP, function() {
+const port = process.env.PORT || 8080;
+const ip = process.env.IP || "127.0.0.1";
+console.log(port);
+console.log(ip);
+console.log(process.env.PORT);
+module.exports = app.listen(port, ip, function() {
   console.log("ToDoList App started listening on port " + process.env.PORT);
 });
