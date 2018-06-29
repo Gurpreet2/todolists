@@ -59,8 +59,6 @@ app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
 app.disable('x-powered-by');
-const PORT = process.env.PORT || 8080;
-const IP = process.env.IP || "127.0.0.1";
 
 // seed the database
 //require("./seeds.js")();
@@ -77,6 +75,8 @@ app.use("/lists/:id/items", require("./routes/items"));
 // ============
 // LISTEN
 // ============
-module.exports = app.listen(PORT, IP, function() {
+const port = process.env.PORT || 8080;
+const ip = process.env.IP || "0.0.0.0";
+module.exports = app.listen(port, ip, function() {
   console.log("ToDoList App started listening on port " + process.env.PORT);
 });
