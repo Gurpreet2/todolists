@@ -10,22 +10,22 @@ const express = require("express"),
       LocalStrategy = require("passport-local"),
       crypto = require("crypto"),
       User = require("./models/user"),
-      expressSanitizer = require("express-sanitizer");
+      expressSanitizer = require("express-sanitizer"),
+      fs = require("fs");
 var app = express();
 
 
 // ============
 // DATABASE SETTINGS
 // ============
-const mongo_host = "localhost"
-const db_name = "todolist"
+const dbUrl = process.env.DATABASE_URL || "mongodb://localhost/todolist";
 // Connect to Mongo database if it is up, error out if not
-mongoose.connect("mongodb://" + mongo_host + "/" + db_name, {
+mongoose.connect(dbUrl, {
   connectTimeoutMS: 5000
 }, function(err) {
   if (err) {
-    console.log("Unable to connect to the Mongo database running on host " + mongo_host);
-    console.log("Please verify it is up and running and accepting connections on port 27017.");
+    console.log("Unable to connect to the Mongo database instance at " + dbUrl.split("@")[1]);
+    console.log("Please verify it is up and running!");
     console.log(err);
     process.exit();
   }
@@ -77,6 +77,6 @@ app.use("/lists/:id/items", require("./routes/items"));
 // ============
 // LISTEN
 // ============
-app.listen(PORT, IP, function() {
+module.exports = app.listen(PORT, IP, function() {
   console.log("ToDoList App started listening on port " + process.env.PORT);
 });
