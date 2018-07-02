@@ -1,49 +1,48 @@
 
+/*navbar*/
 .nav-item {
   white-space: nowrap;
 }
-
 .navbar {
   margin-bottom: 2%;
 }
 
-.list-description {
-  opacity: 0.5;
-}
-
+/*list index page*/
 .todolist-previews {
   list-style-type: none;
   padding-left: 0;
 }
 
+/*list show page*/
+.list-description {
+  opacity: 0.5;
+}
 .list-list {
   list-style-type: none;
+  margin-top: 15px;
 }
-
+.input-add-item {
+  width: 25%;
+  display: inline;
+  margin-right: 5px;
+}
 .list-item {
-  max-width: 75%;
+  /*max-width: 75%;*/
   /*min-width: 500px;*/
 }
-
 .list-item-text {
   
 }
-
-.list-item-button {
-  width: 10%;
-  padding: 5px;
-  display: inline;
-  float: right;
+.edit-button {
+  height: 31px;
 }
-
-.list-item-edit-button {
-  
+a.edit-button i.fa-edit {
+  padding: 3px 0;
 }
-
-.list-item-delete-button {
+.delete-button {
   margin-left: 10px;
+  height: 31px;
 }
-
 li.list-item .list-item-checkbox {
   margin-top: 5px;
   margin-right: 8px;

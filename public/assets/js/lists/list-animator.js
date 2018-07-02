@@ -9,7 +9,7 @@ let itemId = null, text = null, editedText = null, itemTextElement = null, compl
 // edit an item without using JQuery
 document.querySelectorAll("li.list-item").forEach(function(item) {
   // Listen for clicks on the edit button, to edit
-  item.getElementsByClassName("list-item-edit-button")[0].addEventListener("click", function() {
+  item.getElementsByClassName("edit-button")[0].addEventListener("click", function() {
     itemId = item.id;
     itemTextElement = item.getElementsByClassName("list-item-text")[0];
     text = itemTextElement.textContent;
