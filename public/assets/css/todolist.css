@@ -1,4 +1,8 @@
 
+html, body, body .container {
+  height: 100%;
+}
+
 /*navbar*/
 .nav-item {
   white-space: nowrap;
@@ -22,16 +26,13 @@
   margin-top: 15px;
 }
 .input-add-item {
-  width: 25%;
+  max-width: 25%;
   display: inline;
   margin-right: 5px;
 }
 .list-item {
-  /*max-width: 75%;*/
-  /*min-width: 500px;*/
 }
 .list-item-text {
-  
 }
 .edit-button {
   height: 31px;
@@ -46,4 +47,17 @@ a.edit-button i.fa-edit {
 li.list-item .list-item-checkbox {
   margin-top: 5px;
   margin-right: 8px;
+}
+
+/*footer */
+#footer {
+  /*bottom: 0;*/
+  height: 60px;
+  line-height: 60px;
+  padding: 0 20px;
+  margin-top: 20px;
+}
+#footer span {
+  border-right: 1px solid white;
+  margin-right: 5px;
 }
