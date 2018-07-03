@@ -1,50 +1,66 @@
 
+html, body, body .container {
+  height: 100%;
+}
+
+/*navbar*/
 .nav-item {
   white-space: nowrap;
 }
-
 .navbar {
   margin-bottom: 2%;
 }
 
-.list-description {
-  opacity: 0.5;
-}
-
+/*list index page*/
 .todolist-previews {
   list-style-type: none;
   padding-left: 0;
 }
 
+/*list show page*/
+.list-description {
+  opacity: 0.5;
+}
 .list-list {
   list-style-type: none;
+  margin-top: 15px;
 }
-
-.list-item {
-  max-width: 75%;
-  /*min-width: 500px;*/
-}
-
-.list-item-text {
-  
-}
-
-.list-item-button {
-  width: 10%;
-  padding: 5px;
+.input-add-item {
+  max-width: 25%;
   display: inline;
-  float: right;
+  margin-right: 5px;
 }
-
-.list-item-edit-button {
-  
+.list-item {
 }
-
-.list-item-delete-button {
+.list-item-text {
+}
+.edit-button {
+  height: 31px;
+}
+a.edit-button i.fa-edit {
+  padding: 3px 0;
+}
+.delete-button {
   margin-left: 10px;
+  height: 31px;
 }
-
 li.list-item .list-item-checkbox {
   margin-top: 5px;
   margin-right: 8px;
+}
+
+/*footer */
+#footer {
+  /*bottom: 0;*/
+  height: 60px;
+  line-height: 60px;
+  padding: 0 20px;
+  margin-top: 20px;
+}
+#footer #footer-title {
+  border-right: 1px solid white;
+  margin-right: 5px;
+}
+#footer #github-link {
+  color: lightgray;
 }
