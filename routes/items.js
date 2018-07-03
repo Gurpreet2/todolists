@@ -52,7 +52,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
 // UPDATE route
 router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
   req.body.item.text = req.sanitize(req.body.item.text);
-  if (req.body.item.completed !== "true" || req.body.item.completed !== "false") {
+  if (req.body.item.completed !== "true" && req.body.item.completed !== "false") {
     req.body.item.completed = "false";
   }
   User.findById(req.user._id).populate({
