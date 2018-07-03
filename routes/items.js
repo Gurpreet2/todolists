@@ -18,6 +18,10 @@ router.get("/", function(req, res) {
 // CREATE ITEM, add to list
 router.post("/", middleware.isLoggedIn, function(req, res) {
   req.body.item.text = req.sanitize(req.body.item.text);
+  // make sure item doesn't come in as undefined, that it is treated as empty if it does
+  if (!req.body.item.text) {
+    req.body.item.text = "";
+  }
   if (req.body.item.completed !== "true" || req.body.item.completed !== "false") {
     req.body.item.completed = "false";
   }
@@ -52,6 +56,10 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
 // UPDATE route
 router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
   req.body.item.text = req.sanitize(req.body.item.text);
+  // make sure item doesn't come in as undefined, that it is treated as empty if it does
+  if (!req.body.item.text) {
+    req.body.item.text = "";
+  }
   if (req.body.item.completed !== "true" && req.body.item.completed !== "false") {
     req.body.item.completed = "false";
   }

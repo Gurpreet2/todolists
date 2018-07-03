@@ -6,7 +6,13 @@
 <ul class="todolist-previews">
   <% lists.forEach(function(list) { %>
     <li>
-      <a href="/lists/<%= list._id %>"><%= list.name %></a>
+      <a href="/lists/<%= list._id %>">
+        <% if (list.name) { %>
+          <%= list.name %>
+        <% } else { %>
+          undefined
+        <% } %>
+      </a>
       <% if (list.items.length > 0) { %>
         <ul>
           <% let max = Math.min(list.items.length, 3); %>
