@@ -33,6 +33,13 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 router.post("/", middleware.isLoggedIn, function(req, res) {
   req.body.list.name = req.sanitize(req.body.list.name);
   req.body.list.description = req.sanitize(req.body.list.description);
+  // make sure list name or description don't come in as undefined, that they are treated as empty if they do
+  if (!req.body.list.name) {
+    req.body.list.name = "";
+  }
+  if (!req.body.list.description) {
+    req.body.list.description = "";
+  }
   User.findById(req.user._id, function(err, user) {
     if (err) {
       console.error(err);
@@ -86,6 +93,13 @@ router.get("/:id/edit", middleware.isLoggedIn, function(req, res) {
 router.put("/:id", middleware.isLoggedIn, function(req, res) {
   req.body.list.name = req.sanitize(req.body.list.name);
   req.body.list.description = req.sanitize(req.body.list.description);
+  // make sure list name or description don't come in as undefined, that they are treated as empty if they do
+  if (!req.body.list.name) {
+    req.body.list.name = "";
+  }
+  if (!req.body.list.description) {
+    req.body.list.description = "";
+  }
   User.findById(req.user._id).populate({path: "lists", match: {_id: req.params.id}, options: {limit: 1}}).exec(function(err, user) {
     if (err) {
       console.error(err);
