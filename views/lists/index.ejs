@@ -1,31 +1,41 @@
 
 <% include ../partials/header %>
 
-<h2>Lists</h2>
+<div class="row">
+  <h1 class="col-sm-6 text-center">
+    Lists
+  </h1>
+</div>
 
-<ul class="todolist-previews">
-  <% lists.forEach(function(list) { %>
-    <li>
-      <a href="/lists/<%= list._id %>">
-        <% if (list.name) { %>
-          <%= list.name %>
-        <% } else { %>
-          undefined
-        <% } %>
-      </a>
-      <% if (list.items.length > 0) { %>
-        <ul>
-          <% let max = Math.min(list.items.length, 3); %>
-          <% for (let i = 0; i < max; i++) { %>
-            <li><%= list.items[i].text %></li>
+<hr>
+
+<div class="row justify-content-md-center">
+  <div class="col col-lg-10">
+    <ul class="todolist-previews">
+      <% lists.forEach(function(list) { %>
+        <li>
+          <a class="font-weight-bold" href="/lists/<%= list._id %>">
+            <% if (list.name) { %>
+              <%= list.name %>
+            <% } else { %>
+              undefined
+            <% } %>
+          </a>
+          <% if (list.items.length > 0) { %>
+            <ul>
+              <% let max = Math.min(list.items.length, 3); %>
+              <% for (let i = 0; i < max; i++) { %>
+                <li><%= list.items[i].text %></li>
+              <% } %>
+              <% if (max < list.items.length) { %>
+                <li>...</li>
+              <% } %>
+            </ul>
           <% } %>
-          <% if (max < list.items.length) { %>
-            <li>...</li>
-          <% } %>
-        </ul>
-      <% } %>
-    </li>
-  <% }); %>
-</ul>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+</div>
 
 <% include ../partials/footer %>
