@@ -1,5 +1,5 @@
 
-html, body, body .container {
+html, body, body > div.container:first-child {
   height: 100%;
 }
 
@@ -15,6 +15,9 @@ html, body, body .container {
 .todolist-previews {
   list-style-type: none;
   padding-left: 0;
+}
+.todolist-previews li a {
+  font-size: 22px;
 }
 
 /*list show page*/
@@ -55,7 +58,7 @@ li.list-item .list-item-checkbox {
   height: 60px;
   line-height: 60px;
   padding: 0 20px;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 #footer #footer-title {
   border-right: 1px solid white;
@@ -63,4 +66,14 @@ li.list-item .list-item-checkbox {
 }
 #footer #github-link {
   color: lightgray;
+}
+
+/*forms*/
+.todolist-form-header {
+  margin: auto;
+  max-width: 500px;
+}
+.todolist-form {
+  max-width: 500px;
+  margin: auto;
 }
