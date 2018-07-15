@@ -77,3 +77,6 @@ li.list-item .list-item-checkbox {
   max-width: 500px;
   margin: auto;
 }
+#item-form {
+  line-height: 1em;
+}

@@ -17,6 +17,7 @@ router.get("/", function(req, res) {
 
 // CREATE ITEM, add to list
 router.post("/", middleware.isLoggedIn, function(req, res) {
+  req.body.item.text = unescape(decodeURI(req.body.item.text));
   req.body.item.text = req.sanitize(req.body.item.text);
   // make sure item doesn't come in as undefined, that it is treated as empty if it does
   if (!req.body.item.text) {
@@ -40,7 +41,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
         } else {
           user.lists[0].items.push(item);
           user.lists[0].save();
-          res.redirect("/lists/" + req.params.id);
+          res.status(200).send(item);
         }
       });
     }
@@ -55,6 +56,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
 
 // UPDATE route
 router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
+  req.body.item.text = unescape(decodeURI(req.body.item.text));
   req.body.item.text = req.sanitize(req.body.item.text);
   // make sure item doesn't come in as undefined, that it is treated as empty if it does
   if (!req.body.item.text) {
@@ -90,7 +92,7 @@ router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
         } else if (!item) {
           res.status(404).send("The item does not exist."); // and we had just checked for this earlier...
         } else {
-          res.status(200).send();
+          res.status(200).send(item);
         }
       });
     }
@@ -114,10 +116,9 @@ router.delete("/:itemId", middleware.isLoggedIn, function(req, res) {
         } else if (!item) {
           res.redirect("/lists/" + req.params.id);
         } else {
-          
           user.lists[0].items.splice(user.lists[0].items.indexOf(item._id), 1);
           user.lists[0].save();
-          res.redirect("/lists/" + req.params.id);
+          res.status(200).send();
         }
       });
     }

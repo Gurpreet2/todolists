@@ -15,13 +15,14 @@
 
 <hr>
 
-<form style="line-height: 1em;" action="/lists/<%= list._id %>/items" method="POST">
-  <input class="form-control input-add-item" type="text" name="item[text]" placeholder="Add a new item" autofocus>
+<div id="item-new-form">
+<!--<form id="item-form" action="/lists/<%= list._id %>/items" method="POST">-->
+  <input id="item-new-text" class="form-control input-add-item" type="text" name="item[text]" placeholder="Add a new item" autofocus>
   <input type="hidden" name="item[completed]" value="false">
   <button class="btn btn-info btn-sm">
     <i class="fas fa-plus"></i>
   </button>
-</form>
+</div>
 
 <ul id="<%= list._id %>" class="list-list list-group">
   <% list.items.forEach(function(item) { %>
@@ -31,11 +32,11 @@
       <button class="d-flex justify-flex-end edit-button btn btn-outline-dark btn-sm">
         <i class="far fa-edit"></i>
       </button>
-      <form class="d-flex justify-flex-end" action="/lists/<%= list._id %>/items/<%= item._id %>?_method=DELETE" method="POST">
+      <div class="d-flex justify-flex-end">
         <button class="btn btn-sm btn-danger delete-button">
           <i class="fas fa-trash-alt"></i>
         </button>
-      </form>
+      </div>
     </li>
   <% }); %>
 </ul>
