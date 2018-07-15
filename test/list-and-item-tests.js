@@ -147,7 +147,6 @@ describe("list and item restful operations", function() {
           done(err);
         } else {
           expect(res.status).to.equal(200);
-          console.log(res.res);
           done();
         }
       });
