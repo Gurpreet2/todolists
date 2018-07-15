@@ -129,8 +129,11 @@ describe("list and item restful operations", function() {
         if (err) {
           done(err);
         } else {
-          console.log(res);
           expect(res.status).to.equal(200);
+          let resItem = JSON.parse(res.text);
+          expect(resItem.text).to.equal(item.item.text);
+          expect(resItem.completed).to.equal(item.item.completed == true);
+          itemObjectId = resItem._id;
           done();
         }
       });
