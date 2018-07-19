@@ -29,12 +29,23 @@ router.get("/login", function(req, res) {
 });
 
 // handle login logic
-router.post("/login", passport.authenticate("local", 
-  {
-    successRedirect: "/lists",
-    failureRedirect: "/login"
-  }), function(req, res) {
-  });
+router.post("/login", function(req, res, next) {
+  passport.authenticate("local", function(err, user, info) {
+    if (err) {
+      return next(err);
+    } else if (!user) {
+      setTimeout(() => {res.redirect("/login")}, 5000);
+    } else {
+      req.login(user, function(err) {
+        if (err) {
+          return next(err);
+        } else {
+          return res.redirect("/lists");
+        }
+      });
+    }
+  })(req, res, next);
+});
 
 // logout route
 router.get("/logout", function(req, res) {
