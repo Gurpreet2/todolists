@@ -27,6 +27,8 @@ describe("unprotected page availability", function() {
         } else {
           expect(res.status).to.equal(200);
           expect(res.text).to.include("<form action=\"/login\" method=\"POST\">");
+          expect(res.text).to.include("Username:");
+          expect(res.text).to.include("Password:");
           done();
         }
       });
@@ -41,6 +43,8 @@ describe("unprotected page availability", function() {
         } else {
           expect(res.status).to.equal(200);
           expect(res.text).to.include("<form action=\"/register\" method=\"POST\">");
+          expect(res.text).to.include("Username:");
+          expect(res.text).to.include("Password:");
           done();
         }
       });
