@@ -11,16 +11,22 @@ router.get("/register", function(req, res) {
 
 // handle sign up logic
 router.post("/register", function(req, res) {
-  User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
-    if (err) {
-      console.log(err);
-      return res.redirect("/register");
-    } else {
-      passport.authenticate("local")(req, res, function() {
-        res.redirect("/lists");
-      });
-    }
-  });
+  if (req.body.username.trim() == "" || req.body.password.trim() == "") {
+    res.redirect("/register");
+  } else {
+    User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
+      if (err) {
+        console.log(err);
+        return res.redirect("/register");
+      } else {
+        user.verifiedEmail = false;
+        user.save();
+        passport.authenticate("local")(req, res, function() {
+          res.redirect("/lists");
+        });
+      }
+    });
+  }
 });
 
 // show login form

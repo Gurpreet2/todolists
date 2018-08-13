@@ -84,7 +84,7 @@ describe("list and item restful operations", function() {
           expect(res.status).to.equal(200);
           expect(res.text).to.include(list.list.name);
           expect(res.text).to.include(list.list.description);
-          expect(res.text).to.include("/items\" method=\"POST\">");
+          expect(res.text).to.include("class=\"list-list list-group");
           done();
         }
       });

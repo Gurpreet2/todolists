@@ -5,6 +5,8 @@ const mongoose = require("mongoose"),
 const UserSchema = mongoose.Schema({
   username: String,
   password: String,
+  email: String,
+  verifiedEmail: Boolean,
   lists: [
     {
       type: mongoose.Schema.Types.ObjectId,

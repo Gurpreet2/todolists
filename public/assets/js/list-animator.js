@@ -1,5 +1,4 @@
 
-/*global $*/
 /*global ActiveXObject*/
 
 
@@ -35,8 +34,9 @@ function addNewItemListener() {
     alert("An error occurred while trying to create a new item!");
   };
   xhr.send(encodeURI("item[text]=" + escape(encodeURI(text)) + "&item[completed]=false"));
-};
+}
 // adds a new item to the list on the page
+// TODO figure out a better way to do this
 function addNewItem(item) {
   document.getElementById(listId).innerHTML += '    <li id="' + item._id + '" class="d-flex flex-nowrap list-item list-group-item">\
       <input class="d-flex list-item-checkbox" type="checkbox" value="">\
@@ -52,7 +52,7 @@ function addNewItem(item) {
     </li>';
     // add modification event listeners to all items again (for some reason, investigation ongoing, it remove listeners from existing items)
     addItemEventListenersToAllItems();
-};
+}
 
 // add events to listen for item modifications
 addItemEventListenersToAllItems();

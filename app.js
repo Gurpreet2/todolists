@@ -68,6 +68,7 @@ app.disable('x-powered-by');
 // ============
 app.use(require("./routes/index"));
 app.use(require("./routes/auths"));
+app.use(require("./routes/users"));
 app.use("/lists", require("./routes/lists"));
 app.use("/lists/:id/items", require("./routes/items"));
 

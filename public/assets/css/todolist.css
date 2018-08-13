@@ -21,7 +21,7 @@ html, body, body > div.container:first-child {
 }
 
 /*list show page*/
-.list-description {
+.description-light {
   opacity: 0.5;
 }
 .list-list {
@@ -29,7 +29,6 @@ html, body, body > div.container:first-child {
   margin-top: 15px;
 }
 .input-add-item {
-  max-width: 25%;
   display: inline;
   margin-right: 5px;
 }

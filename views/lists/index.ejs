@@ -13,8 +13,8 @@
   <div class="col col-lg-10">
     <ul class="todolist-previews">
       <% lists.forEach(function(list) { %>
-        <li>
-          <a class="font-weight-bold" href="/lists/<%= list._id %>">
+        <li class="list-group mb-4">
+          <a class="font-weight-bold list-group-item list-group-item-action bg-info text-white" href="/lists/<%= list._id %>">
             <% if (list.name) { %>
               <%= list.name %>
             <% } else { %>
@@ -22,13 +22,13 @@
             <% } %>
           </a>
           <% if (list.items.length > 0) { %>
-            <ul>
+            <ul class="list-group mt-2">
               <% let max = Math.min(list.items.length, 3); %>
               <% for (let i = 0; i < max; i++) { %>
-                <li><%= list.items[i].text %></li>
+                <li class="list-group-item"><%= list.items[i].text %></li>
               <% } %>
               <% if (max < list.items.length) { %>
-                <li>...</li>
+                <li class="list-group-item text-warning">...</li>
               <% } %>
             </ul>
           <% } %>

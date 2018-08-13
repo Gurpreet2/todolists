@@ -11,17 +11,24 @@
   </form>
 </div>
 
-<h6 class="d-flex list-description"><%= list.description %></h6>
+<h6 class="d-flex description-light"><%= list.description %></h6>
 
 <hr>
 
-<div id="item-new-form">
-<!--<form id="item-form" action="/lists/<%= list._id %>/items" method="POST">-->
-  <input id="item-new-text" class="form-control input-add-item" type="text" name="item[text]" placeholder="Add a new item" autofocus>
-  <input type="hidden" name="item[completed]" value="false">
-  <button class="btn btn-info btn-sm">
-    <i class="fas fa-plus"></i>
-  </button>
+<div id="item-new-form" class="row">
+  <div class="col-11">
+    <div class="row">
+      <div class="col-10">
+        <input id="item-new-text" class="form-control input-add-item" type="text" name="item[text]" placeholder="Add a new item" autofocus>
+        <input type="hidden" name="item[completed]" value="false">
+      </div>
+      <div class="col-2 mt-1 pl-0">
+        <button class="btn btn-info btn-sm">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ul id="<%= list._id %>" class="list-list list-group">
@@ -41,6 +48,6 @@
   <% }); %>
 </ul>
 
-<script type="text/javascript" src="/assets/js/lists/list-animator.js" async></script>
+<script type="text/javascript" src="/assets/js/list-animator.js" defer></script>
 
 <% include ../partials/footer %>
