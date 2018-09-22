@@ -2,9 +2,13 @@
 module.exports = {
   isLoggedIn: function(req, res, next) {
     if (req.isAuthenticated()) {
-      return next();
+      if (req.session.tokenAuthenticated) {
+        return next();
+      } else {
+        return res.redirect("/login/token");
+      }
     } else {
-      res.redirect("/login");
+      return res.redirect("/login");
     }
   }
-}
+};

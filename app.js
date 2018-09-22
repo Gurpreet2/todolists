@@ -3,6 +3,7 @@
 // MODULES
 // ============
 const express = require("express"),
+      app = express(),
       mongoose = require("mongoose"),
       bodyParser = require("body-parser"),
       methodOverride = require("method-override"),
@@ -11,8 +12,7 @@ const express = require("express"),
       crypto = require("crypto"),
       User = require("./models/user"),
       expressSanitizer = require("express-sanitizer"),
-      fs = require("fs");
-var app = express();
+      flash = require("connect-flash");
 
 
 // ============
@@ -32,7 +32,9 @@ mongoose.connect(dbUrl, {
 });
 
 
+// ============
 // Passport Settings
+// ============
 app.use(require("express-session")({
   secret: crypto.randomBytes(32).toString("base64"),
   resave: false,
@@ -43,10 +45,6 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-app.use(function(req, res, next) {
-  res.locals.currentUser = req.user;
-  next();
-});
 
 
 // ============
@@ -58,7 +56,20 @@ app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
+app.use(flash());
 app.disable('x-powered-by');
+
+
+// ============
+// MIDDLEWARE
+// ============
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
+  next();
+});
+
 
 // seed the database
 //require("./seeds.js")();
@@ -68,7 +79,7 @@ app.disable('x-powered-by');
 // ============
 app.use(require("./routes/index"));
 app.use(require("./routes/auths"));
-app.use(require("./routes/users"));
+app.use("/profile", require("./routes/users"));
 app.use("/lists", require("./routes/lists"));
 app.use("/lists/:id/items", require("./routes/items"));
 

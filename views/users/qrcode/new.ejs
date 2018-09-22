@@ -1,0 +1,23 @@
+
+<% include ../../partials/header %>
+
+<div class="row justify-content-center">
+  <div class="col-6">
+    <h2 class="text-center">Add a New Authentication Token:</h2>
+    <% if (qrcode) { %>
+      <img class="mx-auto d-block" src="<%= qrcode %>">
+    <% } else { %>
+      <div class="alert alert-danger">Unable to load QR code! Please try again.</div>
+    <% } %>
+    
+    <form action="/profile/qrcode/verify" method="POST">
+      <div class="form-group">
+        <label for="tokenCode">Add the token above, and enter a code from the newly added token: </label>
+        <input class="form-control" type="text" id="tokenCode" name="tokenCode" autofocus>
+      </div>
+      <input class="form-control" type="submit">
+    </form>
+  </div>
+</div>
+
+<% include ../../partials/footer %>

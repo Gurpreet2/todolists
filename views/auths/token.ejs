@@ -1,0 +1,22 @@
+
+<% include ../partials/header %>
+
+<h1 class="text-center">
+  Login (Authentication Token)
+</h1>
+
+<div class="row justify-content-md-center">
+  <div class="col col-lg-6 col-md-8 col-sm-12">
+    <form action="/login/token" method="POST">
+      <div class="form-group">
+        <label for="tokenCode">Token:</label>
+        <input id="tokenCode" class="form-control" type="text" name="tokenCode" placeholder="authentication token" autofocus>
+      </div>
+      <div class="form-group">
+        <input class="form-control btn btn-success" type="submit" value="Continue">
+      </div>
+    </form>
+  </div>
+</div>
+
+<% include ../partials/footer %>

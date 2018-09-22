@@ -7,7 +7,28 @@
         <ul class="list-group mt-4">
             <li class="list-group-item">Username: <%= currentUser.username %></li>
             <% if (currentUser.email) { %>
-                <li class="list-group-item">(Note: Emails can be set but are not yet supported) Email: <%= currentUser.email %></li>
+                <li class="list-group-item">
+                    Email: <%= currentUser.email %>
+                    <small class="form-text text-muted">Email addresses can be set but are not yet supported.</small>
+                </li>
+            <% } %>
+            <% if (currentUser.hasToken) { %>
+                <li class="list-group-item d-flex flex-nowrap">
+                    <span class="d-flex">QR Code:</span>
+                    <span class="d-flex flex-fill ml-2"><%= currentUser.totpToken.name %></span>
+                    <span class="d-flex justify-flex-end">
+                        <form action="/profile/qrcode?_method=DELETE" method="POST">
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </span>
+                </li>
+            <% } else { %>
+                <li class="list-group-item d-flex flex-nowrap">
+                    <span class="d-flex flex-fill">QR Code</span>
+                    <span class="d-flex justify-flex-end">
+                        <a class="btn btn-warning pt-1 pb-1" href="/profile/qrcode/new">Add</a>
+                    </span>
+                </li>
             <% } %>
         </ul>
         <a class="btn btn-info mt-4" href="/profile/edit">Edit Profile</a>
