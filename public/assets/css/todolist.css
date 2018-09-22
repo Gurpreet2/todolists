@@ -79,3 +79,11 @@ li.list-item .list-item-checkbox {
 #item-form {
   line-height: 1em;
 }
+
+.bg-dsg {
+  background-color: darkslategray;
+}
+
+.text-white.bg-dsg:hover {
+  background-color: black;
+}
