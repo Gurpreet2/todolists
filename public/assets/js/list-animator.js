@@ -129,7 +129,7 @@ function updateItem(itemId, text, completed) {
   xhr.onerror = function() {
     alert("An error occurred while trying to update the list item!");
   };
-  xhr.send(encodeURI("item[text]=" + escape(encodeURI(text)) + "&item[completed]=false"));
+  xhr.send(encodeURI("item[text]=" + escape(encodeURI(text)) + "&item[completed]=" + completed));
 }
 
 // create new XMLHTTPRequest object
