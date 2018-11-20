@@ -23,6 +23,7 @@ router.post("/register", function(req, res) {
         user.verifiedEmail = false;
         user.save();
         passport.authenticate("local")(req, res, function() {
+          req.session.tokenAuthenticated = true;
           res.redirect("/lists");
         });
       }
