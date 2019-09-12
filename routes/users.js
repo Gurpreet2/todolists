@@ -9,12 +9,26 @@ const express = require("express"),
 
 // get user profile page
 router.get("/", middleware.isLoggedIn, function(req, res) {
-  res.render("users/show");
+  // if user's token hasn't been verified, don't want to save it to user's profile
+  User.findById(req.user._id, function(err, user) {
+    if (err) {
+      console.log(err);
+      req.flash("error", "An unknown error occurred while looking for the user in the database!");
+      return res.redirect("/");
+    } else if (user.hasToken && !user.totpToken.verified) {
+      user.totpToken = undefined;
+      user.hasToken = false;
+      user.save();
+      return res.redirect("/profile");
+    } else {
+      return res.render("users/show");
+    }
+  });
 });
 
 // get user profile edit page
 router.get("/edit", middleware.isLoggedIn, function(req, res) {
-  res.render("users/edit");
+  return res.render("users/edit");
 });
 
 // put request to update user
@@ -41,7 +55,7 @@ router.put("/", middleware.isLoggedIn, function(req, res) {
       }
     });
   }
-  res.redirect("/profile");
+  return res.redirect("/profile");
 });
 
 // delete request to delete user (TODO eventually)

@@ -20,6 +20,9 @@ const express = require("express"),
 // ============
 const dbUrl = process.env.DATABASE_URL || "mongodb://localhost/todolist";
 // Connect to Mongo database if it is up, error out if not
+mongoose.set("useNewUrlParser", true);
+mongoose.set("useUnifiedTopology", true);
+mongoose.set("useFindAndModify", false);
 mongoose.connect(dbUrl, {
   connectTimeoutMS: 5000
 }, function(err) {
