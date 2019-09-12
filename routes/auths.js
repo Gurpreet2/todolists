@@ -43,7 +43,10 @@ router.post("/login", function(req, res) {
       req.flash("error", "Error occurred while trying to log in.");
       return res.redirect("/login");
     } else if (!user) {
-      setTimeout(() => res.redirect("/login"), 5000);
+      setTimeout(() => {
+        req.flash("error", "Error occurred while trying to log in.");
+        res.redirect("/login");
+      }, 5000);
     } else {
       req.login(user, function(err) {
         if (err) {
