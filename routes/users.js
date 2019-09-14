@@ -9,21 +9,7 @@ const express = require("express"),
 
 // get user profile page
 router.get("/", middleware.isLoggedIn, function(req, res) {
-  // if user's token hasn't been verified, don't want to save it to user's profile
-  User.findById(req.user._id, function(err, user) {
-    if (err) {
-      console.log(err);
-      req.flash("error", "An unknown error occurred while looking for the user in the database!");
-      return res.redirect("/");
-    } else if (user.hasToken && !user.totpToken.verified) {
-      user.totpToken = undefined;
-      user.hasToken = false;
-      user.save();
-      return res.redirect("/profile");
-    } else {
-      return res.render("users/show");
-    }
-  });
+  return res.render("users/show");
 });
 
 // get user profile edit page
@@ -92,20 +78,10 @@ router.get("/qrcode/new", middleware.isLoggedIn, function(req, res) {
           req.flash("error", "An unknown error occurred while creating the QR code!");
           return res.redirect("/profile");
         } else {
-          // save QR code
-          User.findByIdAndUpdate(req.user._id, {totpToken: totpToken}, function(err, user) {
-            if (err) {
-              console.err(err);
-              req.flash("error", "An unknown error occurred while looking for user in the database!");
-              return res.redirect("/profile");
-            } else {
-              // Display this data URL to the user in an <img> tag
-              user.hasToken = true;
-              user.totpToken.name = issuer + " (" + label + ")";
-              user.save();
-              return res.render("users/qrcode/new", {qrcode: data_url});
-            }
-          });
+          // show QR code to user
+          totpToken.name = issuer + " (" + label + ")";
+          req.session.totpToken = totpToken;
+          return res.render("users/qrcode/new", {qrcode: data_url});
         }
       });
     }
@@ -120,43 +96,45 @@ router.post("/qrcode/verify", middleware.isLoggedIn, function(req, res) {
       req.flash("error", "An unknown error occurred while looking for the user in the database!");
       return res.redirect("/profile");
     } else {
+      // if user already has a token, display error
+      if (user.hasToken) {
+        req.flash("error", "You already have a token associated with your account! Please delete the existing token before adding a new one!");
+        return res.redirect("/profile");
+      }
       // if token doesn't exist, return error
-      if (!user.hasToken) {
+      if (!req.session.totpToken) {
         req.flash("error", "The token that needs to be verified doesn't exist!");
         return res.redirect("/profile");
       }
-      // check if token needs to be verified
-      if (!user.totpToken.verified) {
-        // check that verification attempts is less than 1, and time limit to verify has not passed, and verify token
-        if (user.totpToken.verifyAttemptsRemaining > 0 && (new Date()).getTime() < user.totpToken.verifyByTime) {
-          user.totpToken.verifyAttemptsRemaining = user.totpToken.verifyAttemptsRemaining - 1;
-          if (speakeasy.totp.verify({ 
-            secret: user.totpToken.ascii,
-            token: req.body.tokenCode,
-            delta: Math.floor(((user.totpToken.verifyByTime - (new Date()).getTime()) / 30000) + 1)
-          })) {
-            // token has been verified
-            user.totpToken.verified = true;
-            delete user.totpToken.verifyByTime;
-            delete user.totpToken.verifyAttemptsRemaining;
-            user.save();
-            req.flash("success", "Token verified!");
-          } else {
-            if (user.totpToken.verifyAttemptsRemaining > 0) {
-              req.flash("error", "Unable to verify token! Attempts remaining: " + user.totpToken.verifyAttemptsRemaining);
-            } else {
-              req.flash("error", "Unable to verify token! No attempts remaining! Please try adding a new token.");
-            }
-          }
-          res.redirect("/profile");
-        } else {
-          req.flash("error", "Token verification attempts exceeded, or unable to verify in time! Please try again.");
-          user.totpToken = null;
+      // check that verification attempts is less than 1, and time limit to verify has not passed, and verify token
+      if (req.session.totpToken.verifyAttemptsRemaining > 0 && (new Date()).getTime() < req.session.totpToken.verifyByTime) {
+        req.session.totpToken.verifyAttemptsRemaining = req.session.totpToken.verifyAttemptsRemaining - 1;
+        if (speakeasy.totp.verify({
+          secret: req.session.totpToken.ascii,
+          token: req.body.tokenCode,
+          window: 1,
+          algorithm: "sha512"
+        })) {
+          // token has been verified
+          req.session.totpToken.verified = true;
+          delete req.session.totpToken.verifyByTime;
+          delete req.session.totpToken.verifyAttemptsRemaining;
+          user.totpToken = req.session.totpToken;
+          user.hasToken = true;
+          delete req.session.totpToken;
           user.save();
-          return res.redirect("/profile");
+          req.flash("success", "Token verified!");
+        } else {
+          if (req.session.totpToken.verifyAttemptsRemaining > 0) {
+            req.flash("error", "Unable to verify token! Attempts remaining: " + req.session.totpToken.verifyAttemptsRemaining);
+          } else {
+            req.flash("error", "Unable to verify token! No attempts remaining! Please try adding a new token.");
+          }
         }
+        return res.redirect("/profile");
       } else {
-        req.flash("error", "Token has already been verified!");
+        req.flash("error", "Token verification attempts exceeded, or unable to verify in time! Please try again.");
+        delete req.session.totpToken;
         return res.redirect("/profile");
       }
     }
@@ -173,7 +151,7 @@ router.delete("/qrcode", middleware.isLoggedIn, function(req, res) {
     } else {
       if (user.hasToken) {
         // token exists, delete it
-        user.totpToken = undefined;
+        delete user.totpToken;
         user.hasToken = false;
         user.save();
         req.flash("success", "Token was deleted successfully.");

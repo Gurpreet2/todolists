@@ -13,18 +13,20 @@ router.get("/register", function(req, res) {
 // handle sign up logic
 router.post("/register", function(req, res) {
   if (req.body.username.trim() == "" || req.body.password.trim() == "") {
-    res.redirect("/register");
+    req.flash("error", "Cannot create user with only whitespace characters in name!");
+    return res.redirect("/register");
   } else {
     User.register(new User({username: req.body.username}), req.body.password, function(err, user) {
       if (err) {
         console.log(err);
+        req.flash("error", err.message);
         return res.redirect("/register");
       } else {
         user.verifiedEmail = false;
         user.save();
         passport.authenticate("local")(req, res, function() {
           req.session.tokenAuthenticated = true;
-          res.redirect("/lists");
+          return res.redirect("/lists");
         });
       }
     });
@@ -89,11 +91,13 @@ router.post("/login/token", function(req, res) {
         return res.redirect("/login");
       } else {
         if (req.body.tokenCode) {
-          if (speakeasy.totp.verifyDelta({
+          const tokenVerified = speakeasy.totp.verifyDelta({
             secret: user.totpToken.ascii,
             token: req.body.tokenCode,
-            window: 1
-          })["delta"] <= 0) {
+            window: 1,
+            algorithm: "sha512"
+          });
+          if (tokenVerified && tokenVerified["delta"] <= 0) {
             // token has been verified
             req.session.tokenAuthenticated = true;
             return res.redirect("/lists");
