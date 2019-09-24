@@ -10,11 +10,18 @@
     <form action="/login" method="POST">
       <div class="form-group">
         <label for="username">Username:</label>
-        <input id="username" class="form-control" type="text" name="username" placeholder="username" autofocus>
+        <input id="username" class="form-control" type="text" name="username" placeholder="Username" autofocus>
       </div>
       <div class="form-group">
         <label for="password">Password:</label>
-        <input id="password" class="form-control" type="password" name="password" placeholder="password">
+        <input id="password" class="form-control" type="password" name="password" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="tokenCode">Token (if applicable):</label>
+        <input id="tokenCode" class="form-control" type="text" name="tokenCode" placeholder="Authentication Token" autofocus>
+        <small id="tokenHelp" class="form-text text-muted">
+          Enter a code from your token, if one was added to the account.
+        </small>
       </div>
       <div class="form-group">
         <input class="form-control btn btn-success" type="submit" value="Login">

@@ -59,13 +59,6 @@ li.list-item .list-item-checkbox {
   padding: 0 20px;
   margin-top: 50px;
 }
-#footer #footer-title {
-  border-right: 1px solid white;
-  margin-right: 5px;
-}
-#footer #github-link {
-  color: lightgray;
-}
 
 /*forms*/
 .todolist-form-header {
