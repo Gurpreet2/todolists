@@ -40,20 +40,22 @@ mongoose.connect(dbUrl, {
 // ============
 // Get secret
 // ============
-let secret;
-try {
-  fs.accessSync("./.private/secret.js", fs.constants.R_OK);
-  secret = require("./.private/secret.js").secret;
-} catch (err) {
-  secret = crypto.randomBytes(32).toString("base64");
+let secret = process.env.SESSION_SECRET;
+if (!secret) {
   try {
-    fs.accessSync(".", fs.constants.W_OK);
-    if (!fs.existsSync("./.private")) {
-      fs.mkdirSync("./.private");
+    fs.accessSync("./.private/secret.js", fs.constants.R_OK);
+    secret = require("./.private/secret.js").secret;
+  } catch (err) {
+    secret = crypto.randomBytes(32).toString("base64");
+    try {
+      fs.accessSync(".", fs.constants.W_OK);
+      if (!fs.existsSync("./.private")) {
+        fs.mkdirSync("./.private");
+      }
+      fs.writeFileSync("./.private/secret.js", "module.exports={secret:'" + secret + "'}");
+    } catch (err2) {
+      console.log("Secrets file does not exist, and cannot create it! Using generated secret.");
     }
-    fs.writeFileSync("./.private/secret.js", "module.exports={secret:'" + secret + "'}");
-  } catch (err2) {
-    console.log("Secrets file does not exist, and cannot create it! Using generated secret.");
   }
 }
 
