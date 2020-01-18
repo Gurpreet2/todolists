@@ -12,7 +12,10 @@ const express = require("express"),
       crypto = require("crypto"),
       User = require("./models/user"),
       expressSanitizer = require("express-sanitizer"),
-      flash = require("connect-flash");
+      flash = require("connect-flash"),
+      session = require("express-session"),
+      MongoStore = require("connect-mongo")(session),
+      fs = require("fs");
 
 
 // ============
@@ -27,21 +30,47 @@ mongoose.connect(dbUrl, {
   connectTimeoutMS: 5000
 }, function(err) {
   if (err) {
-    console.log("Unable to connect to the Mongo database instance at " + dbUrl.split("@")[1]);
+    console.log("Unable to connect to the Mongo database instance at " + (dbUrl.split("@")[1] || dbUrl));
     console.log("Please verify it is up and running!");
     console.log(err);
     process.exit();
   }
 });
 
+// ============
+// Get secret
+// ============
+let secret;
+try {
+  fs.accessSync("./.private/secret.js", fs.constants.R_OK);
+  secret = require("./.private/secret.js").secret;
+} catch (err) {
+  secret = crypto.randomBytes(32).toString("base64");
+  try {
+    fs.accessSync(".", fs.constants.W_OK);
+    if (!fs.existsSync("./.private")) {
+      fs.mkdirSync("./.private");
+    }
+    fs.writeFileSync("./.private/secret.js", "module.exports={secret:'" + secret + "'}");
+  } catch (err2) {
+    console.log("Secrets file does not exist, and cannot create it! Using generated secret.");
+  }
+}
+
 
 // ============
 // Passport Settings
 // ============
-app.use(require("express-session")({
-  secret: crypto.randomBytes(32).toString("base64"),
+app.use(session({
+  secret: secret,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 3 * 24 * 60 * 60,
+    autoRemove: 'disabled',
+    secret: secret
+  })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
