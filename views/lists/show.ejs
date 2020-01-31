@@ -34,6 +34,10 @@
 <ul id="<%= list._id %>" class="list-list list-group">
   <% list.items.forEach(function(item) { %>
     <li id="<%= item._id %>" class="d-flex flex-nowrap list-item list-group-item">
+      <span class="d-flex flex-column move-btn-box">
+        <button class="d-flex btn btn-sm item-move-btn btn-move-up"><i class="fas fa-chevron-up"></i></button>
+        <button class="d-flex btn btn-sm item-move-btn btn-move-down"><i class="fas fa-chevron-down"></i></button>
+      </span>
       <input class="d-flex list-item-checkbox" type="checkbox" value=""<% if (item.completed) { %> checked<% } %>>
       <span class="d-flex flex-fill list-item-text"><%= item.text %></span>
       <button class="d-flex justify-flex-end edit-button btn btn-outline-dark btn-sm">
