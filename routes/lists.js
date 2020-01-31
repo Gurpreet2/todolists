@@ -120,6 +120,53 @@ router.put("/:id", middleware.isLoggedIn, function(req, res) {
   });
 });
 
+// UPDATE 2 - Move an item in the list
+router.put("/:id/moveItem", middleware.isLoggedIn, function(req, res) {
+  const itemId = req.sanitize(req.body.itemId);
+  // negative moveNum moves item up, positive moveNum moves it down
+  const moveNum = Number(req.sanitize(req.body.moveNum));
+  if (isNaN(moveNum)) {
+    console.err("Problem with request to move item in list: moveNum is not a number, actual (sanitized) value: " + req.sanitize(req.body.moveNum));
+    return res.status(400).send("An error occurred trying to move the item in the list.");
+  }
+  User.findById(req.user._id).populate({path: "lists", match: {_id: req.params.id}, options: {limit: 1}}).exec(function(err, user) {
+    if (err) {
+      console.err(err);
+      return res.status(500).send("An error occurred while trying to lookup user and find actioned list.");
+    } else if (!user.lists || user.lists.length == 0) {
+      // list does not exist, or user does not have access to it
+      return res.status(404).send("List does not exist, or you are not authorized to update it!");
+    } else {
+      const items = user.lists[0].items;
+      let itemIndex = -1;
+      // find the item in the list
+      for (let i = 0; i < items.length; i++) {
+        if (items[i]._id.equals(itemId)) {
+          itemIndex = i;
+          break;
+        }
+      }
+      if (itemIndex === -1) {
+        return res.status(404).send("Item not found in list!");
+      }
+      // reorder the list
+      const item = items[itemIndex];
+      let targetIndex = itemIndex + moveNum;
+      if (targetIndex < 0) {
+        targetIndex = 0;
+      }
+      if (targetIndex > items.length - 1) {
+        targetIndex = items.length - 1;
+      }
+      const itemsWithRemovedItem = items.slice(0,itemIndex).concat(items.slice(itemIndex+1));
+      const finalItems = itemsWithRemovedItem.slice(0,targetIndex).concat(item).concat(itemsWithRemovedItem.slice(targetIndex));
+      user.lists[0].items = finalItems;
+      user.lists[0].save();
+      res.status(200).send("Item moved successfully.");
+    }
+  });
+});
+
 // DESTROY >:[ ROUTE
 router.delete("/:id", middleware.isLoggedIn, function(req, res) {
   User.findByIdAndUpdate(req.user._id, {"$pull": {"lists": req.params.id}}, function(err, user) {
