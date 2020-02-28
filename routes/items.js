@@ -29,10 +29,10 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
   User.findById(req.user._id).populate({path: "lists", match: {_id: req.params.id}, options: {limit: 1}}).exec(function(err, user) {
     if (err) {
       console.error(err);
-      res.redirect("/lists");
+      return res.redirect("/lists");
     } else if (!user.lists || user.lists.length === 0) {
       // list does not exist, or user does not have access to it
-      res.status(404).send("List does not exist, or you are not authorized to add an item to it!");
+      return res.status(404).send("List does not exist, or you are not authorized to add an item to it!");
     } else {
       Item.create(req.body.item, function(err, item) {
         if (err || !item) {
@@ -41,7 +41,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
         } else {
           user.lists[0].items.push(item);
           user.lists[0].save();
-          res.status(200).send(item);
+          return res.status(200).send(item);
         }
       });
     }
@@ -69,9 +69,7 @@ router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
     path: "lists", 
     populate: {
       path: "items", 
-      model: "Item", 
-      match: {_id: req.params.itemId}, 
-      options: {limit: 1}
+      model: "Item"
     }, 
     match: {_id: req.params.id}, 
     options: {limit: 1}
@@ -84,7 +82,35 @@ router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
       res.status(404).send("List or item does not exist, or you are not authorized to modify this item in the list!");
     } else {
       // update the item
-      req.body.item.text = decodeURI(unescape(req.body.item.text));
+      const items = user.lists[0].items;
+      let itemIndex = -1;
+      let item;
+      for (let i = 0; i < user.lists[0].items.length; i++) {
+        if (user.lists[0].items[i]._id.equals(req.params.itemId)) {
+          itemIndex = i;
+          item = user.lists[0].items[itemIndex];
+        }
+      }
+      if (itemIndex == -1 || !item) {
+        return res.status(404).send("The item does not exist.");
+      }
+      const completed = req.body.item.completed == "true";
+      if (item.completed != completed) {
+        user.lists[0].items.splice(itemIndex, 1);
+        if (completed) {
+          user.lists[0].items.push(item);
+        } else {
+          let indexFirstCompleted = user.lists[0].items.length;
+          for (let i = 0; i < user.lists[0].items.length; i++) {
+            if (user.lists[0].items[i].completed) {
+              indexFirstCompleted = i;
+              break;
+            }
+          }
+          user.lists[0].items = user.lists[0].items.slice(0, indexFirstCompleted).concat(item).concat(user.lists[0].items.slice(indexFirstCompleted));
+        }
+        user.lists[0].save();
+      }
       Item.findByIdAndUpdate(req.params.itemId, req.body.item, function(err, item) {
         if (err) {
           console.error(err);
@@ -92,7 +118,7 @@ router.put("/:itemId", middleware.isLoggedIn, function(req, res) {
         } else if (!item) {
           res.status(404).send("The item does not exist."); // and we had just checked for this earlier...
         } else {
-          res.status(200).send(item);
+          return res.status(200).send(item);
         }
       });
     }

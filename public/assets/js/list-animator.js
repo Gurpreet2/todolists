@@ -89,6 +89,15 @@ function addItemEventListenersToAllItems() {
         // Get text and if item is completed
         text = itemTextElement.textContent;
         completed = this.checked;
+
+        // if just completed, move to completed section, otherwise move to regular list section
+        if (completed) {
+          const list = document.getElementById(listId + "-completed");
+          list.appendChild(item);
+        } else {
+          const list = document.getElementById(listId);
+          list.appendChild(item);
+        }
         
         // Send update to the database
         updateItem(itemId, text, completed);
