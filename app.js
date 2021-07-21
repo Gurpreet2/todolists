@@ -5,7 +5,6 @@
 const express = require("express"),
       app = express(),
       mongoose = require("mongoose"),
-      bodyParser = require("body-parser"),
       methodOverride = require("method-override"),
       passport = require("passport"),
       LocalStrategy = require("passport-local"),
@@ -21,13 +20,13 @@ const express = require("express"),
 // ============
 // DATABASE SETTINGS
 // ============
-const dbUrl = process.env.DATABASE_URL || "mongodb://localhost/todolist";
+const dbUrl = process.env.DATABASE_URL || "mongodb://localhost:27017/todolist";
 // Connect to Mongo database if it is up, error out if not
-mongoose.set("useNewUrlParser", true);
-mongoose.set("useUnifiedTopology", true);
-mongoose.set("useFindAndModify", false);
 const clientP = mongoose.connect(dbUrl, {
-  connectTimeoutMS: 5000
+  connectTimeoutMS: 5000,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
 }).then(
   (m) => m.connection.getClient(),
   (err) => {
@@ -91,7 +90,8 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/views"));
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 app.use(expressSanitizer());
 app.use(flash());
 app.disable('x-powered-by');
