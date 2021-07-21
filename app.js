@@ -14,7 +14,7 @@ const express = require("express"),
       expressSanitizer = require("express-sanitizer"),
       flash = require("connect-flash"),
       session = require("express-session"),
-      MongoStore = require("connect-mongo")(session),
+      MongoStore = require("connect-mongo"),
       fs = require("fs");
 
 
@@ -26,16 +26,19 @@ const dbUrl = process.env.DATABASE_URL || "mongodb://localhost/todolist";
 mongoose.set("useNewUrlParser", true);
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useFindAndModify", false);
-mongoose.connect(dbUrl, {
+const clientP = mongoose.connect(dbUrl, {
   connectTimeoutMS: 5000
-}, function(err) {
-  if (err) {
-    console.log("Unable to connect to the Mongo database instance at " + (dbUrl.split("@")[1] || dbUrl));
-    console.log("Please verify it is up and running!");
-    console.log(err);
-    process.exit();
+}).then(
+  (m) => m.connection.getClient(),
+  (err) => {
+    if (err) {
+      console.log("Unable to connect to the Mongo database instance at " + (dbUrl.split("@")[1] || dbUrl));
+      console.log("Please verify it is up and running!");
+      console.log(err);
+      process.exit();
+    }
   }
-});
+);
 
 // ============
 // Get secret
@@ -67,9 +70,9 @@ app.use(session({
   secret: secret,
   resave: false,
   saveUninitialized: false,
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection,
-    ttl: 3 * 24 * 60 * 60,
+  store: MongoStore.create({
+    clientPromise: clientP,
+    ttl: 3 * 24 * 60 * 60,  // 3 days
     autoRemove: 'disabled',
     secret: secret
   })
@@ -124,5 +127,5 @@ app.use("/lists/:id/items", require("./routes/items"));
 const port = process.env.PORT || 8080;
 const ip = process.env.IP || "0.0.0.0";
 module.exports = app.listen(port, ip, function() {
-  console.log("ToDoList App started listening on port " + process.env.PORT);
+  console.log("ToDoList App started listening on port " + port);
 });
